@@ -19,7 +19,7 @@ public class GestorHotel {
     private final ArrayList<Recepcionista> recepcionistas;
     
     //Usuaio con secion Activa
-    private Recepcionista seccionActiva;
+    private Recepcionista sesionActiva;
     
     //Constructor privado
     private GestorHotel(){
@@ -31,11 +31,37 @@ public class GestorHotel {
         recepcionistas.add(
                 new Recepcionista("recepcion2","Hotel456")
         );
-        seccionActiva=null;
+        sesionActiva=null;
     }
     
     //Devuelve unica instancia
     public static GestorHotel getInstancia(){
         return instancia;
+    }
+    
+    //Funciones
+    public synchronized boolean iniciarSesion(String usuario,String clave){
+        //Validar inicio de sesion
+        if(sesionActiva!=null){
+            return false;
+        }
+        
+        //Buscar usuario
+        for (Recepcionista recepcionista: recepcionistas) {
+            if(recepcionista.getUsuario().equals(usuario) 
+                    && recepcionista.validarClave(clave)){
+                sesionActiva=recepcionista;
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public synchronized void cerrarSesion(){
+        sesionActiva=null;
+    }
+    
+    public synchronized Recepcionista getSesionActiva(){
+            return sesionActiva;
     }
 }
