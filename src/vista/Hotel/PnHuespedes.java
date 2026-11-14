@@ -4,6 +4,13 @@
  */
 package vista.Hotel;
 
+import controlador.ControladorHuespedes;
+import java.util.ArrayList;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import modelo.Huesped;
+
 /**
  *
  * @author USER
@@ -15,6 +22,51 @@ public class PnHuespedes extends javax.swing.JPanel {
      */
     public PnHuespedes() {
         initComponents();
+        new ControladorHuespedes(this);
+    }
+
+    public JButton getBtnRegistrarHuesped() {
+        return btnRegistrarHuesped;
+    }
+
+    public String getIdentificacion() {
+        return txtIdentificacion.getText();
+    }
+
+    public String getNombreCompleto() {
+        return txtNombreCompleto.getText();
+    }
+
+    public String getTelefono() {
+        return txtTelefono.getText();
+    }
+
+    public String getCorreo() {
+        return txtCorreo.getText();
+    }
+
+    public void mostrarError(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje, "Registro de huéspedes",
+                JOptionPane.WARNING_MESSAGE);
+    }
+
+    public void mostrarHuespedes(ArrayList<Huesped> huespedes) {
+        DefaultTableModel modeloTabla = (DefaultTableModel) tblHuespedes.getModel();
+        modeloTabla.setRowCount(0);
+        for (Huesped huesped : huespedes) {
+            modeloTabla.addRow(new Object[] {
+                huesped.getIdentificacion(), huesped.getNombreCompleto(),
+                huesped.getTelefono(), huesped.getCorreo()
+            });
+        }
+    }
+
+    public void limpiarCampos() {
+        txtIdentificacion.setText("");
+        txtNombreCompleto.setText("");
+        txtTelefono.setText("");
+        txtCorreo.setText("");
+        txtIdentificacion.requestFocusInWindow();
     }
 
     /**
@@ -26,19 +78,94 @@ public class PnHuespedes extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblIdentificacion = new javax.swing.JLabel();
+        txtIdentificacion = new javax.swing.JTextField();
+        lblNombreCompleto = new javax.swing.JLabel();
+        txtNombreCompleto = new javax.swing.JTextField();
+        lblTelefono = new javax.swing.JLabel();
+        txtTelefono = new javax.swing.JTextField();
+        lblCorreo = new javax.swing.JLabel();
+        txtCorreo = new javax.swing.JTextField();
+        btnRegistrarHuesped = new javax.swing.JButton();
+        scrollHuespedes = new javax.swing.JScrollPane();
+        tblHuespedes = new javax.swing.JTable();
+
+        lblIdentificacion.setText("Identificación");
+        lblNombreCompleto.setText("Nombre completo");
+        lblTelefono.setText("Teléfono");
+        lblCorreo.setText("Correo electrónico");
+        btnRegistrarHuesped.setText("Registrar huésped");
+        tblHuespedes.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[0][4], new String[]{"Identificación", "Nombre completo", "Teléfono", "Correo electrónico"}) {
+            @Override
+            public boolean isCellEditable(int fila, int columna) {
+                return false;
+            }
+
+            @Override
+            public Class<?> getColumnClass(int columna) {
+                return String.class;
+            }
+        });
+        scrollHuespedes.setViewportView(tblHuespedes);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        setLayout(layout);
+        layout.setHorizontalGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup()
+                        .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup()
+                                        .addComponent(lblIdentificacion)
+                                        .addComponent(lblNombreCompleto)
+                                        .addComponent(lblTelefono)
+                                        .addComponent(lblCorreo))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup()
+                                        .addComponent(txtIdentificacion, 0, 280, Short.MAX_VALUE)
+                                        .addComponent(txtNombreCompleto, 0, 280, Short.MAX_VALUE)
+                                        .addComponent(txtTelefono, 0, 280, Short.MAX_VALUE)
+                                        .addComponent(txtCorreo, 0, 280, Short.MAX_VALUE)))
+                        .addComponent(btnRegistrarHuesped)
+                        .addComponent(scrollHuespedes, 0, 460, Short.MAX_VALUE))
+                .addContainerGap());
+        layout.setVerticalGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup()
+                        .addComponent(lblIdentificacion)
+                        .addComponent(txtIdentificacion, -2, -2, -2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup()
+                        .addComponent(lblNombreCompleto)
+                        .addComponent(txtNombreCompleto, -2, -2, -2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup()
+                        .addComponent(lblTelefono)
+                        .addComponent(txtTelefono, -2, -2, -2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup()
+                        .addComponent(lblCorreo)
+                        .addComponent(txtCorreo, -2, -2, -2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnRegistrarHuesped)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scrollHuespedes, 0, 180, Short.MAX_VALUE)
+                .addContainerGap());
+
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel lblIdentificacion;
+    private javax.swing.JTextField txtIdentificacion;
+    private javax.swing.JLabel lblNombreCompleto;
+    private javax.swing.JTextField txtNombreCompleto;
+    private javax.swing.JLabel lblTelefono;
+    private javax.swing.JTextField txtTelefono;
+    private javax.swing.JLabel lblCorreo;
+    private javax.swing.JTextField txtCorreo;
+    private javax.swing.JButton btnRegistrarHuesped;
+    private javax.swing.JScrollPane scrollHuespedes;
+    private javax.swing.JTable tblHuespedes;
     // End of variables declaration//GEN-END:variables
 }
