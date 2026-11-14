@@ -17,6 +17,7 @@ public class GestorHotel {
     
     //Lista
     private final ArrayList<Recepcionista> recepcionistas;
+    private final ArrayList<Huesped> huespedes = new ArrayList<>();
     
     //Usuaio con secion Activa
     private Recepcionista sesionActiva;
@@ -63,5 +64,44 @@ public class GestorHotel {
     
     public synchronized Recepcionista getSesionActiva(){
             return sesionActiva;
+    }
+
+    public synchronized String registrarHuesped(String identificacion, String nombreCompleto,
+                                               String telefono, String correo) {
+        if (identificacion == null || nombreCompleto == null || telefono == null || correo == null) {
+            return "Todos los campos son obligatorios.";
+        }
+
+        identificacion = identificacion.trim();
+        nombreCompleto = nombreCompleto.trim();
+        telefono = telefono.trim();
+        correo = correo.trim();
+
+        if (identificacion.isEmpty() || nombreCompleto.isEmpty()
+                || telefono.isEmpty() || correo.isEmpty()) {
+            return "Todos los campos son obligatorios.";
+        }
+
+        int arroba = correo.indexOf('@');
+        int punto = correo.lastIndexOf('.');
+
+        if (arroba <= 0 || arroba != correo.lastIndexOf('@')
+                || punto <= arroba + 1 || punto == correo.length() - 1
+                || correo.contains(" ")) {
+            return "El correo debe tener un formato como ana@hotel.com.";
+        }
+
+        for (Huesped huesped : huespedes) {
+            if (huesped.getIdentificacion().equals(identificacion)) {
+                return "Ya existe un huésped con esa identificación.";
+            }
+        }
+
+        huespedes.add(new Huesped(identificacion, nombreCompleto, telefono, correo));
+        return "";
+    }
+
+    public synchronized ArrayList<Huesped> getHuespedes() {
+        return new ArrayList<>(huespedes);
     }
 }
