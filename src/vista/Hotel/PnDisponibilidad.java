@@ -4,6 +4,8 @@
  */
 package vista.Hotel;
 
+import controlador.ControladorDisponibilidad;
+import javax.swing.JButton;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -20,6 +22,25 @@ public class PnDisponibilidad extends javax.swing.JPanel {
     public PnDisponibilidad() {
         initComponents();
         mostrarFechaActual();
+        new ControladorDisponibilidad(this);
+    }
+
+    public JButton getBtnConsultar() {
+        return jButton1;
+    }
+
+    public String getFechaConsulta() {
+        return jTextField1.getText();
+    }
+
+    public void mostrarAviso(String mensaje) {
+        jLabel2.setText(mensaje);
+        jTextArea1.setText("");
+    }
+
+    public void mostrarErrorFecha() {
+        mostrarAviso("Fecha inválida. Usa el formato dd/mm/aaaa.");
+        jTextField1.requestFocusInWindow();
     }
     
     public void mostrarFechaActual(){
