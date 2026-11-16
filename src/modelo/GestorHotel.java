@@ -4,6 +4,7 @@
  */
 package modelo;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -16,23 +17,20 @@ public class GestorHotel {
     private static final GestorHotel instancia = new GestorHotel();
     
     //Lista
-    private final ArrayList<Recepcionista> recepcionistas;
+    private final ArrayList<Recepcionista> recepcionistas = new ArrayList<>();
     private final ArrayList<Huesped> huespedes = new ArrayList<>();
+    private final ArrayList<Habitacion> habitaciones = new ArrayList<>();
+    private final ArrayList<Reserva> reservas = new ArrayList<>();
+    
+    private Recepcionista sesionActiva;
     
     //Usuaio con secion Activa
     private Recepcionista sesionActiva;
     
     //Constructor privado
     private GestorHotel(){
-        recepcionistas=new ArrayList<>();
-        
-        recepcionistas.add(
-                new Recepcionista("recepcion1","Hotel123")
-        );
-        recepcionistas.add(
-                new Recepcionista("recepcion2","Hotel456")
-        );
-        sesionActiva=null;
+        recepcionistas.add(new Recepcionista("recepcion1","Hotel123"));
+        recepcionistas.add(new Recepcionista("recepcion2","Hotel456"));
     }
     
     //Devuelve unica instancia
@@ -63,12 +61,14 @@ public class GestorHotel {
     }
     
     public synchronized Recepcionista getSesionActiva(){
-            return sesionActiva;
+        return sesionActiva;
     }
 
+    //=====Huespedes=====
     public synchronized String registrarHuesped(String identificacion, String nombreCompleto,
-                                               String telefono, String correo) {
-        if (identificacion == null || nombreCompleto == null || telefono == null || correo == null) {
+            String telefono, String correo) {
+        if (identificacion == null || nombreCompleto == null 
+                || telefono == null || correo == null) {
             return "Todos los campos son obligatorios.";
         }
 
@@ -82,11 +82,13 @@ public class GestorHotel {
             return "Todos los campos son obligatorios.";
         }
 
-        int arroba = correo.indexOf('@');
-        int punto = correo.lastIndexOf('.');
+        int arroba = correo.indexOf("@");
+        int ultimoArroba = correo.lastIndexOf("@");
+        int punto = correo.lastIndexOf(".");
 
-        if (arroba <= 0 || arroba != correo.lastIndexOf('@')
-                || punto <= arroba + 1 || punto == correo.length() - 1
+        if (arroba <= 0 || arroba != ultimoArroba
+                || punto <= arroba + 1 
+                || punto == correo.length() - 1
                 || correo.contains(" ")) {
             return "El correo debe tener un formato como ana@hotel.com.";
         }
@@ -97,11 +99,116 @@ public class GestorHotel {
             }
         }
 
-        huespedes.add(new Huesped(identificacion, nombreCompleto, telefono, correo));
+        huespedes.add(new Huesped(identificacion, nombreCompleto, telefono, correo)
+        );
         return "";
     }
 
     public synchronized ArrayList<Huesped> getHuespedes() {
         return new ArrayList<>(huespedes);
+    }
+    
+    //======Habitaciones=====    
+    public synchronized String registrarHabitacion(Habitacion habitacion){
+        if(habitacion==null || habitacion.getNumero().trim().isEmpty()){
+            return "El numero de habitacion es obligatorio.";
+        }
+        
+        for(Habitacion existente : habitaciones){
+            if(existente.getNumero().equalsIgnoreCase(habitacion.getNumero())){
+                return "Ya existe una habitacion con ese numero.";
+            }
+        }  
+        habitaciones.add(habitacion);
+        return "";
+    }
+    
+    public synchronized ArrayList<Habitacion> getHabitaciones(){
+        return new ArrayList<>(habitaciones);
+    }
+    
+    //=====Reservas=====    
+    public synchronized Reserva registarReserva(Huesped huesped,Habitacion habitacion,
+        int personas,LocalDate entrada,LocalDate salida){
+        
+        if(huesped==null){
+            throw new IllegalArgumentException("Debe seleccionar un huesped."); 
+        }
+        if(habitacion==null){
+            throw new IllegalArgumentException("Debe selecionar una habitacion");
+        }
+        if(entrada==null || salida==null){
+            throw new IllegalArgumentException("Las fechas son obligatorias");
+        }
+        if(entrada.isBefore(LocalDate.now())){
+            throw new IllegalArgumentException("La fecha de entrada no puede ser anterior a hoy");
+        }
+        if(!salida.isAfter(entrada)){
+            throw new IllegalArgumentException("La fecha de salida debe ser posterior a hoy");
+        }
+        if(personas<=0){
+            throw new IllegalArgumentException("La cantidad de personas deb ser mayor que cero");
+        }
+        if(personas > habitacion.getCapacidad()){
+            throw new IllegalArgumentException("La cantidad de personas supera la capacidad");
+        }
+        if(hayConflicto(habitacion,entrada,salida)){
+            throw new IllegalArgumentException("la habitacion ya esta ocupada durante ese periodo");
+        }
+        
+        String codigo=String.format("R%04d",reservas.size()+1);
+        
+        Reserva reserva=new Reserva(codigo,huesped,habitacion,
+            personas,entrada,salida,sesionActiva);
+        reservas.add(reserva);
+        return reserva;
+    } 
+    
+    public synchronized boolean hayConflicto(Habitacion habitacion,
+        LocalDate entrada,LocalDate salida){
+        
+        for(Reserva reserva : reservas){
+            boolean bloquea = reserva.getEstado()==EstadoReserva.CONFIRMADA
+                    || reserva.getEstado()==EstadoReserva.CONFIRMADA;
+            if(!bloquea){
+                continue;
+            }
+            if(!reserva.getHabitacion().getNumero()
+                    .equals(habitacion.getNumero())){
+                continue;
+            }
+            boolean seSuperpone=entrada.isBefore(reserva.getFechaSalida()) 
+                    && salida.isAfter(reserva.getFechaEntrada());
+            if(seSuperpone){
+                return true;
+            }
+        }
+        return false;
+    } 
+    
+    public synchronized Reserva buscarReserva(String codigo){
+        for(Reserva reserva : reservas){
+            if(reserva.getCodigo().equalsIgnoreCase(codigo.trim())){
+                return reserva;
+            }
+        }
+        return null;
+    }
+    
+    //======Vencimientos=====
+    public synchronized int marcarVencidas(LocalDate fechaActual){
+        int cantidad=0;
+        for(Reserva reserva : reservas){
+            if(reserva.getEstado()==EstadoReserva.CONFIRMADA 
+                && reserva.getFechaEntrada().isBefore(fechaActual)){
+                reserva.cambiarEstado(EstadoReserva.VENCIDA);
+                cantidad++;
+            }
+        }
+        return cantidad;
+    }
+    
+    public synchronized ArrayList<Reserva> simularVencidad(){
+        
     }
 }
