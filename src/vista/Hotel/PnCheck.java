@@ -73,8 +73,10 @@ public class PnCheck extends javax.swing.JPanel {
         jLabel13.setText("—");
 
         jButton2.setText("Registrar entrada");
+        jButton2.setEnabled(false);
 
         jButton3.setText("Registrar salida");
+        jButton3.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
