@@ -28,7 +28,8 @@ public class Reserva {
     
     //Constructor
     public Reserva(String codigo, Huesped huesped, Habitacion habitacion, 
-            int personas, LocalDate fechaEntrada, LocalDate fechaSalida, int noches, long importe, Recepcionista recepcionista, LocalDate fechaSalidaReal, EstadoReserva estado) {
+            int personas, LocalDate fechaEntrada, LocalDate fechaSalida,
+            Recepcionista recepcionista) {
         this.codigo = codigo;
         this.huesped = huesped;
         this.habitacion = habitacion;
@@ -36,7 +37,7 @@ public class Reserva {
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
         this.noches = (int) ChronoUnit.DAYS.between(fechaEntrada, fechaSalida);
-        this.importe = noches*habitacion.getTarifa();
+        this.importe = this.noches * habitacion.getTarifa();
         this.recepcionista = recepcionista;
         this.fechaSalidaReal = null;
         this.estado = EstadoReserva.CONFIRMADA;

@@ -241,4 +241,17 @@ public class GestorHotel {
         }
         return disponibles;
     }
+        
+    public synchronized ArrayList<Reserva> simularVencidad(LocalDate fechaReferencia) {
+        ArrayList<Reserva> vencidas = new ArrayList<>();
+
+        for (Reserva reserva : reservas) {
+            if (reserva.getEstado() == EstadoReserva.CONFIRMADA
+                    && reserva.getFechaEntrada().isBefore(fechaReferencia)) {
+                vencidas.add(reserva);
+            }
+        }
+
+        return vencidas;
+    }
 }
