@@ -8,64 +8,65 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
+ * Único punto de acceso a los datos del hotel (patrón Singleton).
  *
  * @author USER
  */
 public class GestorHotel {
-    
-    //Única instancia
+
     private static final GestorHotel instancia = new GestorHotel();
-    
-    //Lista
+
     private final ArrayList<Recepcionista> recepcionistas = new ArrayList<>();
     private final ArrayList<Huesped> huespedes = new ArrayList<>();
     private final ArrayList<Habitacion> habitaciones = new ArrayList<>();
     private final ArrayList<Reserva> reservas = new ArrayList<>();
-        
-    //Usuaio con secion Activa
+
     private Recepcionista sesionActiva;
-    
-    //Constructor privado
-    private GestorHotel(){
-        recepcionistas.add(new Recepcionista("recepcion1","Hotel123"));
-        recepcionistas.add(new Recepcionista("recepcion2","Hotel456"));
+    private int siguienteCodigo = 1;
+
+    private GestorHotel() {
+        recepcionistas.add(new Recepcionista("recepcion1", "Hotel123"));
+        recepcionistas.add(new Recepcionista("recepcion2", "Hotel456"));
     }
-    
-    //Devuelve unica instancia
-    public static GestorHotel getInstancia(){
+
+    public static GestorHotel getInstancia() {
         return instancia;
     }
-    
-    //Funciones
-    public synchronized boolean iniciarSesion(String usuario,String clave){
-        //Validar inicio de sesion
-        if(sesionActiva!=null){
+
+    // ---------------- Sesión ----------------
+
+    public synchronized boolean iniciarSesion(String usuario, String clave) {
+
+        if (sesionActiva != null) {
             return false;
         }
-        
-        //Buscar usuario
-        for (Recepcionista recepcionista: recepcionistas) {
-            if(recepcionista.getUsuario().equals(usuario) 
-                    && recepcionista.validarClave(clave)){
-                sesionActiva=recepcionista;
+
+        for (Recepcionista recepcionista : recepcionistas) {
+            if (recepcionista.getUsuario().equals(usuario)
+                    && recepcionista.validarClave(clave)) {
+
+                sesionActiva = recepcionista;
                 return true;
             }
         }
+
         return false;
     }
-    
-    public synchronized void cerrarSesion(){
-        sesionActiva=null;
+
+    public synchronized void cerrarSesion() {
+        sesionActiva = null;
     }
-    
-    public synchronized Recepcionista getSesionActiva(){
+
+    public synchronized Recepcionista getSesionActiva() {
         return sesionActiva;
     }
 
-    //=====Huespedes=====
-    public synchronized String registrarHuesped(String identificacion, String nombreCompleto,
-            String telefono, String correo) {
-        if (identificacion == null || nombreCompleto == null 
+    // ---------------- Huéspedes ----------------
+
+    public synchronized String registrarHuesped(String identificacion,
+            String nombreCompleto, String telefono, String correo) {
+
+        if (identificacion == null || nombreCompleto == null
                 || telefono == null || correo == null) {
             return "Todos los campos son obligatorios.";
         }
@@ -80,12 +81,12 @@ public class GestorHotel {
             return "Todos los campos son obligatorios.";
         }
 
-        int arroba = correo.indexOf("@");
-        int ultimoArroba = correo.lastIndexOf("@");
-        int punto = correo.lastIndexOf(".");
+        int arroba = correo.indexOf('@');
+        int ultimoArroba = correo.lastIndexOf('@');
+        int punto = correo.lastIndexOf('.');
 
         if (arroba <= 0 || arroba != ultimoArroba
-                || punto <= arroba + 1 
+                || punto <= arroba + 1
                 || punto == correo.length() - 1
                 || correo.contains(" ")) {
             return "El correo debe tener un formato como ana@hotel.com.";
@@ -97,152 +98,236 @@ public class GestorHotel {
             }
         }
 
-        huespedes.add(new Huesped(identificacion, nombreCompleto, telefono, correo)
+        huespedes.add(
+                new Huesped(identificacion, nombreCompleto, telefono, correo)
         );
+
         return "";
     }
 
     public synchronized ArrayList<Huesped> getHuespedes() {
         return new ArrayList<>(huespedes);
     }
-    
-    //======Habitaciones=====    
-    public synchronized String registrarHabitacion(Habitacion habitacion){
-        if(habitacion==null || habitacion.getNumero().trim().isEmpty()){
-            return "El numero de habitacion es obligatorio.";
+
+    // ---------------- Habitaciones ----------------
+
+    public synchronized String registrarHabitacion(Habitacion habitacion) {
+
+        if (habitacion == null || habitacion.getNumero().trim().isEmpty()) {
+            return "El número de habitación es obligatorio.";
         }
-        
-        for(Habitacion existente : habitaciones){
-            if(existente.getNumero().equalsIgnoreCase(habitacion.getNumero())){
-                return "Ya existe una habitacion con ese numero.";
+
+        for (Habitacion existente : habitaciones) {
+            if (existente.getNumero().equalsIgnoreCase(habitacion.getNumero())) {
+                return "Ya existe una habitación con ese número.";
             }
-        }  
+        }
+
         habitaciones.add(habitacion);
         return "";
     }
-    
-    public synchronized ArrayList<Habitacion> getHabitaciones(){
+
+    public synchronized ArrayList<Habitacion> getHabitaciones() {
         return new ArrayList<>(habitaciones);
     }
-    
-    //=====Reservas=====    
-    public ArrayList<Reserva> getReservas() {
-        return reservas;
-    }
-    
-    public synchronized Reserva registrarReserva(Huesped huesped,Habitacion habitacion,
-        int personas,LocalDate entrada,LocalDate salida){
-        
-        if(huesped==null){
-            throw new IllegalArgumentException("Debe seleccionar un huesped."); 
+
+    // ---------------- Reservas ----------------
+
+    public synchronized Reserva registrarReserva(
+            Huesped huesped,
+            Habitacion habitacion,
+            int personas,
+            LocalDate entrada,
+            LocalDate salida) {
+
+        if (huesped == null) {
+            throw new IllegalArgumentException("Debe seleccionar un huésped.");
         }
-        if(habitacion==null){
-            throw new IllegalArgumentException("Debe selecionar una habitacion");
+
+        if (habitacion == null) {
+            throw new IllegalArgumentException("Debe seleccionar una habitación.");
         }
-        if(entrada==null || salida==null){
-            throw new IllegalArgumentException("Las fechas son obligatorias");
+
+        if (entrada == null || salida == null) {
+            throw new IllegalArgumentException("Las fechas son obligatorias.");
         }
-        if(entrada.isBefore(LocalDate.now())){
-            throw new IllegalArgumentException("La fecha de entrada no puede ser anterior a hoy");
+
+        if (entrada.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException(
+                    "La fecha de entrada no puede ser anterior a hoy.");
         }
-        if(!salida.isAfter(entrada)){
-            throw new IllegalArgumentException("La fecha de salida debe ser posterior a hoy");
+
+        if (!salida.isAfter(entrada)) {
+            throw new IllegalArgumentException(
+                    "La fecha de salida debe ser posterior a la entrada.");
         }
-        if(personas<=0){
-            throw new IllegalArgumentException("La cantidad de personas deb ser mayor que cero");
+
+        if (personas <= 0) {
+            throw new IllegalArgumentException(
+                    "La cantidad de personas debe ser mayor que cero.");
         }
-        if(personas > habitacion.getCapacidad()){
-            throw new IllegalArgumentException("La cantidad de personas supera la capacidad");
+
+        if (personas > habitacion.getCapacidad()) {
+            throw new IllegalArgumentException(
+                    "La cantidad de personas supera la capacidad de la habitación.");
         }
-        if(hayConflicto(habitacion,entrada,salida)){
-            throw new IllegalArgumentException("la habitacion ya esta ocupada durante ese periodo");
+
+        if (hayConflicto(habitacion, entrada, salida)) {
+            throw new IllegalArgumentException(
+                    "La habitación ya está ocupada durante ese período.");
         }
-        String codigo=String.format("R%04d",reservas.size()+1);
-        Reserva reserva=new Reserva(codigo,huesped,habitacion,
-            personas,entrada,salida,sesionActiva);
+
+        String codigo = String.format("R%04d", siguienteCodigo);
+        siguienteCodigo++;
+
+        Reserva reserva = new Reserva(
+                codigo,
+                huesped,
+                habitacion,
+                personas,
+                entrada,
+                salida,
+                sesionActiva
+        );
+
         reservas.add(reserva);
+
         return reserva;
-    } 
-    
-    public synchronized boolean hayConflicto(Habitacion habitacion,
-        LocalDate entrada,LocalDate salida){
-        
-        for(Reserva reserva : reservas){
-            boolean bloquea = reserva.getEstado()==EstadoReserva.CONFIRMADA
-                    || reserva.getEstado()==EstadoReserva.CONFIRMADA;
-            if(!bloquea){
+    }
+
+    public synchronized boolean hayConflicto(
+            Habitacion habitacion,
+            LocalDate entrada,
+            LocalDate salida) {
+
+        for (Reserva reserva : reservas) {
+
+            boolean bloquea = reserva.getEstado() == EstadoReserva.CONFIRMADA
+                    || reserva.getEstado() == EstadoReserva.HOSPEDADO;
+
+            if (!bloquea) {
                 continue;
             }
-            if(!reserva.getHabitacion().getNumero()
-                    .equals(habitacion.getNumero())){
+
+            if (!reserva.getHabitacion().getNumero()
+                    .equals(habitacion.getNumero())) {
                 continue;
             }
-            boolean seSuperpone=entrada.isBefore(reserva.getFechaSalida()) 
+
+            boolean seSuperpone
+                    = entrada.isBefore(reserva.getFechaSalida())
                     && salida.isAfter(reserva.getFechaEntrada());
-            if(seSuperpone){
+
+            if (seSuperpone) {
                 return true;
             }
         }
+
         return false;
-    } 
-    
-    public synchronized Reserva buscarReserva(String codigo){
-        for(Reserva reserva : reservas){
-            if(reserva.getCodigo().equalsIgnoreCase(codigo.trim())){
+    }
+
+    public synchronized ArrayList<Reserva> getReservas() {
+        return new ArrayList<>(reservas);
+    }
+
+    public synchronized Reserva buscarReserva(String codigo) {
+
+        if (codigo == null) {
+            return null;
+        }
+
+        for (Reserva reserva : reservas) {
+            if (reserva.getCodigo().equalsIgnoreCase(codigo.trim())) {
                 return reserva;
             }
         }
+
         return null;
     }
-    
-    //======Vencimientos=====
-    public synchronized int marcarVencidas(LocalDate fechaActual){
-        int cantidad=0;
-        for(Reserva reserva : reservas){
-            if(reserva.getEstado()==EstadoReserva.CONFIRMADA 
-                && reserva.getFechaEntrada().isBefore(fechaActual)){
+
+    // ---------------- Vencimientos ----------------
+
+    public synchronized int marcarVencidas(LocalDate fechaActual) {
+
+        int cantidad = 0;
+
+        for (Reserva reserva : reservas) {
+
+            if (reserva.getEstado() == EstadoReserva.CONFIRMADA
+                    && reserva.getFechaEntrada().isBefore(fechaActual)) {
+
                 reserva.cambiarEstado(EstadoReserva.VENCIDA);
                 cantidad++;
             }
         }
+
         return cantidad;
     }
-    
-    public synchronized ArrayList<Reserva> simularVencidas(LocalDate fechaReferencia){
+
+    /**
+     * Simulación informativa: no modifica el estado real de las reservas.
+     */
+    public synchronized ArrayList<Reserva> simularVencidas(
+            LocalDate fechaReferencia) {
+
         ArrayList<Reserva> resultado = new ArrayList<>();
+
         for (Reserva reserva : reservas) {
+
             if (reserva.getEstado() == EstadoReserva.CONFIRMADA
                     && reserva.getFechaEntrada().isBefore(fechaReferencia)) {
+
                 resultado.add(reserva);
             }
         }
+
         return resultado;
     }
-    
-    //=====Consultas habitacion======
-    public synchronized ArrayList<Habitacion> habitacionesDisponibles(LocalDate fecha) {
+
+    // ---------------- Consulta simple de disponibilidad ----------------
+
+    /**
+     * Método iterativo de apoyo para la consulta de disponibilidad. Daniel
+     * puede reutilizarlo dentro de su método recursivo (RF-10).
+     */
+    public synchronized ArrayList<Habitacion> habitacionesDisponibles(
+            LocalDate fecha) {
+
         ArrayList<Habitacion> disponibles = new ArrayList<>();
+
         for (Habitacion habitacion : habitaciones) {
+
             boolean ocupada = false;
+
             for (Reserva reserva : reservas) {
-                boolean bloquea = reserva.getEstado() == EstadoReserva.CONFIRMADA
-                    || reserva.getEstado() == EstadoReserva.HOSPEDADO;
+
+                boolean bloquea
+                        = reserva.getEstado() == EstadoReserva.CONFIRMADA
+                        || reserva.getEstado() == EstadoReserva.HOSPEDADO;
+
                 if (!bloquea) {
                     continue;
                 }
-                boolean mismaHabitacion = reserva.getHabitacion().getNumero()
-                    .equals(habitacion.getNumero());
-                boolean incluyeFecha = !fecha.isBefore(reserva.getFechaEntrada())
-                    && fecha.isBefore(reserva.getFechaSalida());
+
+                boolean mismaHabitacion
+                        = reserva.getHabitacion().getNumero()
+                                .equals(habitacion.getNumero());
+
+                boolean incluyeFecha
+                        = !fecha.isBefore(reserva.getFechaEntrada())
+                        && fecha.isBefore(reserva.getFechaSalida());
+
                 if (mismaHabitacion && incluyeFecha) {
                     ocupada = true;
                     break;
                 }
             }
+
             if (!ocupada) {
                 disponibles.add(habitacion);
             }
         }
+
         return disponibles;
     }
 }

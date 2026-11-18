@@ -8,11 +8,12 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 /**
+ * Reserva de una habitación para un huésped.
  *
  * @author USER
  */
 public class Reserva {
-    //Atributos
+
     private final String codigo;
     private final Huesped huesped;
     private final Habitacion habitacion;
@@ -22,14 +23,14 @@ public class Reserva {
     private final int noches;
     private final long importe;
     private final Recepcionista recepcionista;
-    
-    private LocalDate fechaSalidaReal;
-    private EstadoReserva estado;
-    
-    //Constructor
-    public Reserva(String codigo, Huesped huesped, Habitacion habitacion, 
+
+    private volatile LocalDate fechaSalidaReal;
+    private volatile EstadoReserva estado;
+
+    public Reserva(String codigo, Huesped huesped, Habitacion habitacion,
             int personas, LocalDate fechaEntrada, LocalDate fechaSalida,
             Recepcionista recepcionista) {
+
         this.codigo = codigo;
         this.huesped = huesped;
         this.habitacion = habitacion;
@@ -43,7 +44,6 @@ public class Reserva {
         this.estado = EstadoReserva.CONFIRMADA;
     }
 
-    //Getters
     public String getCodigo() {
         return codigo;
     }
@@ -86,19 +86,41 @@ public class Reserva {
 
     public EstadoReserva getEstado() {
         return estado;
-    } 
-    
-    //Funciones
-    public void cambiarEstado(EstadoReserva nuevoEstado){
-        this.estado=nuevoEstado;
     }
-    
-    public void registrarSalidaReal(LocalDate fecha){
-        this.fechaSalidaReal=fecha;
+
+    /**
+     * Aplica únicamente las transiciones permitidas por el enunciado:
+     * Confirmada -> Hospedado, Confirmada -> Vencida y
+     * Hospedado -> Finalizada.
+     *
+     * @param nuevoEstado estado al que se desea pasar
+     */
+    public synchronized void cambiarEstado(EstadoReserva nuevoEstado) {
+        if (nuevoEstado == null) {
+            throw new IllegalArgumentException("El estado no puede ser nulo.");
+        }
+
+        boolean transicionValida
+                = (estado == EstadoReserva.CONFIRMADA
+                && (nuevoEstado == EstadoReserva.HOSPEDADO
+                || nuevoEstado == EstadoReserva.VENCIDA))
+                || (estado == EstadoReserva.HOSPEDADO
+                && nuevoEstado == EstadoReserva.FINALIZADA);
+
+        if (!transicionValida) {
+            throw new IllegalStateException(
+                    "Transición no permitida: " + estado + " -> " + nuevoEstado);
+        }
+
+        this.estado = nuevoEstado;
+    }
+
+    public synchronized void registrarSalidaReal(LocalDate fecha) {
+        this.fechaSalidaReal = fecha;
     }
 
     @Override
     public String toString() {
         return codigo + " - " + huesped.getNombreCompleto();
-    } 
+    }
 }

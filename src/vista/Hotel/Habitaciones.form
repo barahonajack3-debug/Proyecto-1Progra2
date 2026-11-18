@@ -12,17 +12,153 @@
     <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
   </AuxValues>
-
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="400" max="32767" attributes="0"/>
+        <Group type="102" alignment="0" attributes="0">
+          <EmptySpace max="-2" attributes="0"/>
+          <Group type="103" groupAlignment="0" attributes="0">
+            <Component id="lblTitulo" alignment="0" min="-2" max="-2" attributes="0"/>
+            <Group type="102" alignment="0" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                <Component id="lblNumero" alignment="0" min="-2" max="-2" attributes="0"/>
+                <Component id="lblTipo" alignment="0" min="-2" max="-2" attributes="0"/>
+                <Component id="lblCapacidad" alignment="0" min="-2" max="-2" attributes="0"/>
+                <Component id="lblTarifa" alignment="0" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                <Component id="txtNumero" pref="240" max="32767" attributes="0"/>
+                <Component id="cmbTipo" pref="240" max="32767" attributes="0"/>
+                <Component id="txtCapacidad" pref="240" max="32767" attributes="0"/>
+                <Component id="txtTarifa" pref="240" max="32767" attributes="0"/>
+              </Group>
+            </Group>
+            <Component id="btnRegistrar" alignment="0" min="-2" max="-2" attributes="0"/>
+            <Component id="scrollTabla" pref="480" max="32767" attributes="0"/>
+          </Group>
+          <EmptySpace max="-2" attributes="0"/>
+        </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="300" max="32767" attributes="0"/>
+        <Group type="102" alignment="0" attributes="0">
+          <EmptySpace max="-2" attributes="0"/>
+          <Component id="lblTitulo" alignment="0" min="-2" max="-2" attributes="0"/>
+          <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+          <Group type="103" groupAlignment="3" attributes="0">
+            <Component id="lblNumero" alignment="3" min="-2" max="-2" attributes="0"/>
+            <Component id="txtNumero" alignment="3" min="-2" max="-2" attributes="0"/>
+          </Group>
+          <EmptySpace max="-2" attributes="0"/>
+          <Group type="103" groupAlignment="3" attributes="0">
+            <Component id="lblTipo" alignment="3" min="-2" max="-2" attributes="0"/>
+            <Component id="cmbTipo" alignment="3" min="-2" max="-2" attributes="0"/>
+          </Group>
+          <EmptySpace max="-2" attributes="0"/>
+          <Group type="103" groupAlignment="3" attributes="0">
+            <Component id="lblCapacidad" alignment="3" min="-2" max="-2" attributes="0"/>
+            <Component id="txtCapacidad" alignment="3" min="-2" max="-2" attributes="0"/>
+          </Group>
+          <EmptySpace max="-2" attributes="0"/>
+          <Group type="103" groupAlignment="3" attributes="0">
+            <Component id="lblTarifa" alignment="3" min="-2" max="-2" attributes="0"/>
+            <Component id="txtTarifa" alignment="3" min="-2" max="-2" attributes="0"/>
+          </Group>
+          <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+          <Component id="btnRegistrar" alignment="0" min="-2" max="-2" attributes="0"/>
+          <EmptySpace max="-2" attributes="0"/>
+          <Component id="scrollTabla" pref="220" max="32767" attributes="0"/>
+          <EmptySpace max="-2" attributes="0"/>
+        </Group>
       </Group>
     </DimensionLayout>
   </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" name="lblTitulo">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Segoe UI" size="18" style="1"/>
+        </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="96" green="56" red="1c" type="rgb"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Registro de habitaciones"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblNumero">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="N&#xfa;mero"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtNumero">
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblTipo">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Tipo"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="cmbTipo">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="3">
+            <StringItem index="0" value="Individual"/>
+            <StringItem index="1" value="Doble"/>
+            <StringItem index="2" value="Familiar"/>
+          </StringArray>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblCapacidad">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Capacidad"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtCapacidad">
+      <Properties>
+        <Property name="editable" type="boolean" value="false"/>
+        <Property name="focusable" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblTarifa">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Tarifa (&#x20a1;)"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtTarifa">
+      <Properties>
+        <Property name="editable" type="boolean" value="false"/>
+        <Property name="focusable" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnRegistrar">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Registrar habitaci&#xf3;n"/>
+      </Properties>
+    </Component>
+    <Container class="javax.swing.JScrollPane" name="scrollTabla">
+      <AuxValues>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+      </AuxValues>
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JTable" name="tblHabitaciones">
+          <Properties>
+            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
+              <Table columnCount="4" rowCount="0">
+                <Column editable="false" title="Número" type="java.lang.String"/>
+                <Column editable="false" title="Tipo" type="java.lang.String"/>
+                <Column editable="false" title="Capacidad" type="java.lang.String"/>
+                <Column editable="false" title="Tarifa (₡)" type="java.lang.String"/>
+              </Table>
+            </Property>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+  </SubComponents>
 </Form>

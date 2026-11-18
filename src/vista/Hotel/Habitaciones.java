@@ -4,9 +4,17 @@
  */
 package vista.Hotel;
 
+import controlador.ControladorHabitaciones;
+import java.util.ArrayList;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.table.DefaultTableModel;
+import modelo.Habitacion;
+
 /**
+ * Registro y listado de habitaciones.
  *
- * @author USER
+ * @author Jaxander
  */
 public class Habitaciones extends javax.swing.JPanel {
 
@@ -15,6 +23,45 @@ public class Habitaciones extends javax.swing.JPanel {
      */
     public Habitaciones() {
         initComponents();
+        new ControladorHabitaciones(this);
+    }
+
+    public JButton getBtnRegistrar() {
+        return btnRegistrar;
+    }
+
+    public JComboBox<String> getCmbTipo() {
+        return cmbTipo;
+    }
+
+    public String getNumero() {
+        return txtNumero.getText();
+    }
+
+    public void setCapacidad(String capacidad) {
+        txtCapacidad.setText(capacidad);
+    }
+
+    public void setTarifa(String tarifa) {
+        txtTarifa.setText(tarifa);
+    }
+
+    public void limpiar() {
+        txtNumero.setText("");
+        cmbTipo.setSelectedIndex(0);
+        txtNumero.requestFocusInWindow();
+    }
+
+    public void mostrarHabitaciones(ArrayList<Habitacion> habitaciones) {
+        DefaultTableModel modeloTabla = (DefaultTableModel) tblHabitaciones.getModel();
+        modeloTabla.setRowCount(0);
+        for (Habitacion habitacion : habitaciones) {
+            modeloTabla.addRow(new Object[]{
+                habitacion.getNumero(), habitacion.getTipo(),
+                habitacion.getCapacidad(),
+                String.format("%,d", habitacion.getTarifa())
+            });
+        }
     }
 
     /**
@@ -26,19 +73,124 @@ public class Habitaciones extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblTitulo = new javax.swing.JLabel();
+        lblNumero = new javax.swing.JLabel();
+        txtNumero = new javax.swing.JTextField();
+        lblTipo = new javax.swing.JLabel();
+        cmbTipo = new javax.swing.JComboBox<>();
+        lblCapacidad = new javax.swing.JLabel();
+        txtCapacidad = new javax.swing.JTextField();
+        lblTarifa = new javax.swing.JLabel();
+        txtTarifa = new javax.swing.JTextField();
+        btnRegistrar = new javax.swing.JButton();
+        scrollTabla = new javax.swing.JScrollPane();
+        tblHabitaciones = new javax.swing.JTable();
+
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblTitulo.setForeground(new java.awt.Color(28, 86, 150));
+        lblTitulo.setText("Registro de habitaciones");
+
+        lblNumero.setText("Número");
+
+        lblTipo.setText("Tipo");
+
+        cmbTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Individual", "Doble", "Familiar" }));
+
+        lblCapacidad.setText("Capacidad");
+
+        txtCapacidad.setEditable(false);
+        txtCapacidad.setFocusable(false);
+
+        lblTarifa.setText("Tarifa (₡)");
+
+        txtTarifa.setEditable(false);
+        txtTarifa.setFocusable(false);
+
+        btnRegistrar.setText("Registrar habitación");
+
+        tblHabitaciones.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Número", "Tipo", "Capacidad", "Tarifa (₡)"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        scrollTabla.setViewportView(tblHabitaciones);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTitulo)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblNumero)
+                            .addComponent(lblTipo)
+                            .addComponent(lblCapacidad)
+                            .addComponent(lblTarifa))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtNumero, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+                            .addComponent(cmbTipo, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+                            .addComponent(txtCapacidad, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+                            .addComponent(txtTarifa, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)))
+                    .addComponent(btnRegistrar)
+                    .addComponent(scrollTabla, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblTitulo)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNumero)
+                    .addComponent(txtNumero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTipo)
+                    .addComponent(cmbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCapacidad)
+                    .addComponent(txtCapacidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTarifa)
+                    .addComponent(txtTarifa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(btnRegistrar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scrollTabla, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnRegistrar;
+    private javax.swing.JComboBox<String> cmbTipo;
+    private javax.swing.JLabel lblCapacidad;
+    private javax.swing.JLabel lblNumero;
+    private javax.swing.JLabel lblTarifa;
+    private javax.swing.JLabel lblTipo;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JScrollPane scrollTabla;
+    private javax.swing.JTable tblHabitaciones;
+    private javax.swing.JTextField txtCapacidad;
+    private javax.swing.JTextField txtNumero;
+    private javax.swing.JTextField txtTarifa;
     // End of variables declaration//GEN-END:variables
 }

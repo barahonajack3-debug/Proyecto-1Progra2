@@ -34,6 +34,15 @@ public class ControladorReservas implements ActionListener{
         this.vista = vista;
         this.gestor = GestorHotel.getInstancia();
         vista.getBtnRegistrar().addActionListener(this);
+        refrescar();
+    }
+
+    /**
+     * Vuelve a cargar los combos y la tabla. Se invoca al mostrar la pestaña
+     * para que aparezcan los huéspedes y habitaciones registrados después de
+     * haber creado la ventana principal.
+     */
+    public void refrescar() {
         cargarHuespedes();
         cargarHabitaciones();
         actualizarTabla();

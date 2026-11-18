@@ -4,17 +4,70 @@
  */
 package vista.Hotel;
 
+import controlador.ControladorSimulacion;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import javax.swing.JButton;
+import javax.swing.table.DefaultTableModel;
+import modelo.Reserva;
+
 /**
+ * Simulación de reservas vencidas para una fecha de referencia.
  *
- * @author USER
+ * @author Jaxander
  */
 public class PnSimulacion extends javax.swing.JPanel {
+
+    private final DateTimeFormatter formato
+            = DateTimeFormatter.ofPattern("dd/MM/uuuu");
 
     /**
      * Creates new form PnSimulacion
      */
     public PnSimulacion() {
         initComponents();
+        txtFecha.setText(LocalDate.now().format(formato));
+        new ControladorSimulacion(this);
+    }
+
+    public JButton getBtnSimular() {
+        return btnSimular;
+    }
+
+    public String getFechaReferencia() {
+        return txtFecha.getText();
+    }
+
+    public void mostrarReservas(ArrayList<Reserva> reservas, LocalDate fecha) {
+        DefaultTableModel modeloTabla
+                = (DefaultTableModel) tblResultados.getModel();
+        modeloTabla.setRowCount(0);
+
+        for (Reserva reserva : reservas) {
+            modeloTabla.addRow(new Object[]{
+                reserva.getCodigo(),
+                reserva.getHuesped().getNombreCompleto(),
+                reserva.getHabitacion().getNumero(),
+                reserva.getFechaEntrada().format(formato),
+                reserva.getFechaSalida().format(formato),
+                reserva.getEstado()
+            });
+        }
+
+        String referencia = fecha.format(formato);
+
+        if (reservas.isEmpty()) {
+            lblResultado.setText("No hay reservas que se consideren vencidas al "
+                    + referencia + ".");
+        } else if (reservas.size() == 1) {
+            lblResultado.setText("1 reserva se consideraría vencida al "
+                    + referencia + ".");
+        } else {
+            lblResultado.setText(reservas.size()
+                    + " reservas se considerarían vencidas al "
+                    + referencia + ".");
+        }
     }
 
     /**
@@ -26,19 +79,85 @@ public class PnSimulacion extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblTitulo = new javax.swing.JLabel();
+        lblFecha = new javax.swing.JLabel();
+        txtFecha = new javax.swing.JTextField();
+        btnSimular = new javax.swing.JButton();
+        lblResultado = new javax.swing.JLabel();
+        scrollResultados = new javax.swing.JScrollPane();
+        tblResultados = new javax.swing.JTable();
+
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblTitulo.setForeground(new java.awt.Color(28, 86, 150));
+        lblTitulo.setText("Simulación de reservas vencidas");
+
+        lblFecha.setText("Fecha de referencia (dd/MM/aaaa)");
+
+        btnSimular.setText("Simular");
+
+        lblResultado.setText("Pendiente de simulación");
+
+        tblResultados.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Código", "Huésped", "Habitación", "Entrada", "Salida", "Estado"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        scrollResultados.setViewportView(tblResultados);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTitulo)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblFecha)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSimular))
+                    .addComponent(lblResultado)
+                    .addComponent(scrollResultados, javax.swing.GroupLayout.DEFAULT_SIZE, 640, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblTitulo)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblFecha)
+                    .addComponent(txtFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSimular))
+                .addGap(18, 18, 18)
+                .addComponent(lblResultado)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scrollResultados, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnSimular;
+    private javax.swing.JLabel lblFecha;
+    private javax.swing.JLabel lblResultado;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JScrollPane scrollResultados;
+    private javax.swing.JTable tblResultados;
+    private javax.swing.JTextField txtFecha;
     // End of variables declaration//GEN-END:variables
 }

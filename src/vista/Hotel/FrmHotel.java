@@ -4,19 +4,31 @@
  */
 package vista.Hotel;
 
+import controlador.ControladorHotel;
+import javax.swing.JButton;
+
 /**
+ * Ventana principal del sistema, con una pestaña por módulo.
  *
- * @author USER
+ * @author Jaxander
  */
 public class FrmHotel extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrmHotel.class.getName());
 
     /**
      * Creates new form FrmHotel
      */
     public FrmHotel() {
         initComponents();
+        new ControladorHotel(this);
+        setLocationRelativeTo(null);
+    }
+
+    public JButton getBtnCambiarUsuario() {
+        return btnCambiarUsuario;
+    }
+
+    public void setRecepcionista(String usuario) {
+        lblSesion.setText("Sesión: " + usuario);
     }
 
     /**
@@ -28,47 +40,81 @@ public class FrmHotel extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        tabs = new javax.swing.JTabbedPane();
+        pnInicio = new vista.Hotel.PnInicio();
+        pnHuespedes = new vista.Hotel.PnHuespedes();
+        pnHabitaciones = new vista.Hotel.Habitaciones();
+        pnReservas = new vista.Hotel.Reservas();
+        pnDisponibilidad = new vista.Hotel.PnDisponibilidad();
+        pnCheck = new vista.Hotel.PnCheck();
+        pnSimulacion = new vista.Hotel.PnSimulacion();
+        pnPie = new javax.swing.JPanel();
+        lblSesion = new javax.swing.JLabel();
+        btnCambiarUsuario = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Sistema de Gestión Hotelera");
+
+        tabs.addTab("Inicio", pnInicio);
+        tabs.addTab("Huéspedes", pnHuespedes);
+        tabs.addTab("Habitaciones", pnHabitaciones);
+        tabs.addTab("Reservas", pnReservas);
+        tabs.addTab("Disponibilidad", pnDisponibilidad);
+        tabs.addTab("Check-in / Check-out", pnCheck);
+        tabs.addTab("Simulación", pnSimulacion);
+
+        lblSesion.setText("Sesión: —");
+
+        btnCambiarUsuario.setText("Cambiar usuario");
+
+        javax.swing.GroupLayout pnPieLayout = new javax.swing.GroupLayout(pnPie);
+        pnPie.setLayout(pnPieLayout);
+        pnPieLayout.setHorizontalGroup(
+            pnPieLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnPieLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblSesion)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnCambiarUsuario)
+                .addContainerGap())
+        );
+        pnPieLayout.setVerticalGroup(
+            pnPieLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnPieLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnPieLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblSesion)
+                    .addComponent(btnCambiarUsuario))
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(tabs)
+            .addComponent(pnPie, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addComponent(tabs, javax.swing.GroupLayout.DEFAULT_SIZE, 520, Short.MAX_VALUE)
+            .addComponent(pnPie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new FrmHotel().setVisible(true));
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCambiarUsuario;
+    private javax.swing.JLabel lblSesion;
+    private javax.swing.JPanel pnPie;
+    private javax.swing.JTabbedPane tabs;
+    private vista.Hotel.Habitaciones pnHabitaciones;
+    private vista.Hotel.PnCheck pnCheck;
+    private vista.Hotel.PnDisponibilidad pnDisponibilidad;
+    private vista.Hotel.PnHuespedes pnHuespedes;
+    private vista.Hotel.PnInicio pnInicio;
+    private vista.Hotel.PnSimulacion pnSimulacion;
+    private vista.Hotel.Reservas pnReservas;
     // End of variables declaration//GEN-END:variables
 }
