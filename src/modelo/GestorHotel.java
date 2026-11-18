@@ -192,6 +192,54 @@ public class GestorHotel {
         return null;
     }
     
+    // ===== Disponibilidad =====
+    public synchronized int consultarDisponibilidad(
+            LocalDate fecha, ArrayList<String> numeros) {
+
+        numeros.clear();
+        return contarDisponibles(fecha, numeros, 0);
+    }
+
+    private int contarDisponibles(
+            LocalDate fecha, ArrayList<String> numeros, int indice) {
+
+        // Caso base: ya revisamos todas las habitaciones.
+        if (indice == habitaciones.size()) {
+            return 0;
+        }
+
+        Habitacion habitacion = habitaciones.get(indice);
+        int cantidad = 0;
+
+        if (estaDisponible(habitacion, fecha)) {
+            numeros.add(habitacion.getNumero());
+            cantidad = 1;
+        }
+
+        // Sumamos esta habitación y revisamos la siguiente.
+        return cantidad + contarDisponibles(fecha, numeros, indice + 1);
+    }
+
+    private boolean estaDisponible(Habitacion habitacion, LocalDate fecha) {
+
+        for (Reserva reserva : reservas) {
+            boolean mismaHabitacion = reserva.getHabitacion().getNumero()
+                    .equalsIgnoreCase(habitacion.getNumero());
+
+            boolean bloquea = reserva.getEstado() == EstadoReserva.CONFIRMADA
+                    || reserva.getEstado() == EstadoReserva.HOSPEDADO;
+
+            boolean dentroDelPeriodo = !fecha.isBefore(reserva.getFechaEntrada())
+                    && fecha.isBefore(reserva.getFechaSalida());
+
+            if (mismaHabitacion && bloquea && dentroDelPeriodo) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     //======Vencimientos=====
     public synchronized int marcarVencidas(LocalDate fechaActual){
         int cantidad=0;
