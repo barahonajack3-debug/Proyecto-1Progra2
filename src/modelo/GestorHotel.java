@@ -21,9 +21,7 @@ public class GestorHotel {
     private final ArrayList<Huesped> huespedes = new ArrayList<>();
     private final ArrayList<Habitacion> habitaciones = new ArrayList<>();
     private final ArrayList<Reserva> reservas = new ArrayList<>();
-    
-    private Recepcionista sesionActiva;
-    
+        
     //Usuaio con secion Activa
     private Recepcionista sesionActiva;
     
@@ -155,9 +153,7 @@ public class GestorHotel {
         if(hayConflicto(habitacion,entrada,salida)){
             throw new IllegalArgumentException("la habitacion ya esta ocupada durante ese periodo");
         }
-        
         String codigo=String.format("R%04d",reservas.size()+1);
-        
         Reserva reserva=new Reserva(codigo,huesped,habitacion,
             personas,entrada,salida,sesionActiva);
         reservas.add(reserva);
@@ -208,7 +204,41 @@ public class GestorHotel {
         return cantidad;
     }
     
-    public synchronized ArrayList<Reserva> simularVencidad(){
-        
+    public synchronized ArrayList<Reserva> simularVencidad(LocalDate fechaReferencia){
+        ArrayList<Reserva> resultado = new ArrayList<>();
+        for (Reserva reserva : reservas) {
+            if (reserva.getEstado() == EstadoReserva.CONFIRMADA
+                    && reserva.getFechaEntrada().isBefore(fechaReferencia)) {
+                resultado.add(reserva);
+            }
+        }
+        return resultado;
+    }
+    
+    //=====Consultas habitacion======
+    public synchronized ArrayList<Habitacion> habitacionesDisponibles(LocalDate fecha) {
+        ArrayList<Habitacion> disponibles = new ArrayList<>();
+        for (Habitacion habitacion : habitaciones) {
+            boolean ocupada = false;
+            for (Reserva reserva : reservas) {
+                boolean bloquea = reserva.getEstado() == EstadoReserva.CONFIRMADA
+                    || reserva.getEstado() == EstadoReserva.HOSPEDADO;
+                if (!bloquea) {
+                    continue;
+                }
+                boolean mismaHabitacion = reserva.getHabitacion().getNumero()
+                    .equals(habitacion.getNumero());
+                boolean incluyeFecha = !fecha.isBefore(reserva.getFechaEntrada())
+                    && fecha.isBefore(reserva.getFechaSalida());
+                if (mismaHabitacion && incluyeFecha) {
+                    ocupada = true;
+                    break;
+                }
+            }
+            if (!ocupada) {
+                disponibles.add(habitacion);
+            }
+        }
+        return disponibles;
     }
 }
