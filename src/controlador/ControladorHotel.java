@@ -27,13 +27,6 @@ public class ControladorHotel {
         vista.getBtnCambiarUsuario().addActionListener(e -> cambiarUsuario());
     }
 
-    /**
-     * Lanza los procesos de supervisión en segundo plano. Por ahora arranca el
-     * hilo 1 (SupervisorReservas); cuando esté disponible el hilo 2 se une aquí.
-     * No permite una segunda ejecución mientras la anterior siga activa.
-     *
-     * @return true si se inició, false si ya había una supervisión en curso
-     */
     public boolean ejecutarSupervision() {
         if (!supervisionActiva.compareAndSet(false, true)) {
             return false;
@@ -54,7 +47,6 @@ public class ControladorHotel {
         }, "VigilanteSupervision");
         vigilante.setDaemon(true);
         vigilante.start();
-
         return true;
     }
 
@@ -65,8 +57,7 @@ public class ControladorHotel {
     private void cambiarUsuario() {
         int respuesta = JOptionPane.showConfirmDialog(vista,"Debe cerrar la sesión actual para ingresar con otro usuario.\n"+ 
             "Los datos registrados se conservarán.",
-            "Cambiar usuario",JOptionPane.YES_NO_OPTION
-        );
+            "Cambiar usuario",JOptionPane.YES_NO_OPTION);
         if (respuesta != JOptionPane.YES_OPTION) {
             return;
         }
