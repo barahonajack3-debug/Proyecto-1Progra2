@@ -5,7 +5,6 @@
 package modelo;
 
 /**
- * Clase base de todas las habitaciones del hotel.
  *
  * @author USER
  */

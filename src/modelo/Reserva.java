@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 /**
- * Reserva de una habitación para un huésped.
  *
  * @author USER
  */

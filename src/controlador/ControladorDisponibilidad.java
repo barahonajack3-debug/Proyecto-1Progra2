@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package controlador;
 
 import java.awt.event.ActionEvent;
@@ -8,6 +12,10 @@ import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import vista.Hotel.PnDisponibilidad;
 
+/**
+ *
+ * @author USER
+ */
 public class ControladorDisponibilidad implements ActionListener {
 
     private final PnDisponibilidad vista;

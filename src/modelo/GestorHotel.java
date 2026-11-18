@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
- * Único punto de acceso a los datos del hotel (patrón Singleton).
+ * 
  *
  * @author USER
  */

@@ -5,9 +5,9 @@ import javax.swing.UIManager;
 import vista.Login.FrmLogin;
 
 /**
- * Punto de entrada de la aplicación.
  *
- * @author Jaxander
+ *
+ * @author USER
  */
 public class Proyecto1Progra2 {
 
