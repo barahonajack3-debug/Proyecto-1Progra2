@@ -286,6 +286,89 @@ public class GestorHotel {
         return true;
     }
 
+    // ===== Indicadores del hotel =====
+    public synchronized int getTotalHabitaciones() {
+        return habitaciones.size();
+    }
+
+    public synchronized int getHabitacionesOcupadas() {
+        int cantidad = 0;
+
+        for (Habitacion habitacion : habitaciones) {
+            if (estaHospedada(habitacion)) {
+                cantidad++;
+            }
+        }
+
+        return cantidad;
+    }
+
+    private boolean estaHospedada(Habitacion habitacion) {
+        for (Reserva reserva : reservas) {
+            boolean mismaHabitacion = reserva.getHabitacion().getNumero()
+                    .equalsIgnoreCase(habitacion.getNumero());
+
+            if (mismaHabitacion
+                    && reserva.getEstado() == EstadoReserva.HOSPEDADO) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public synchronized int getHabitacionesNoOcupadas() {
+        return habitaciones.size() - getHabitacionesOcupadas();
+    }
+
+    public synchronized int getReservasConfirmadas() {
+        int cantidad = 0;
+
+        for (Reserva reserva : reservas) {
+            if (reserva.getEstado() == EstadoReserva.CONFIRMADA) {
+                cantidad++;
+            }
+        }
+
+        return cantidad;
+    }
+
+    public synchronized int getReservasVencidas() {
+        int cantidad = 0;
+
+        for (Reserva reserva : reservas) {
+            if (reserva.getEstado() == EstadoReserva.VENCIDA) {
+                cantidad++;
+            }
+        }
+
+        return cantidad;
+    }
+
+    public synchronized long calcularIngresosEsperados() {
+        return sumarIngresosConfirmados(reservas, 0);
+    }
+
+    private long sumarIngresosConfirmados(
+            ArrayList<Reserva> listaReservas, int indice) {
+
+        // Caso base: se revisaron todas las reservas.
+        if (indice == listaReservas.size()) {
+            return 0;
+        }
+
+        Reserva reserva = listaReservas.get(indice);
+        long importe = 0;
+
+        if (reserva.getEstado() == EstadoReserva.CONFIRMADA) {
+            importe = reserva.getImporte();
+        }
+
+        // Sumamos el importe y revisamos la siguiente reserva.
+        return importe
+                + sumarIngresosConfirmados(listaReservas, indice + 1);
+    }
+
     //======Vencimientos=====
     public synchronized int marcarVencidas(LocalDate fechaActual){
         int cantidad=0;
