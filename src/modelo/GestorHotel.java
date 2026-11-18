@@ -192,6 +192,52 @@ public class GestorHotel {
         return null;
     }
     
+    // ===== Check-in y check-out =====
+    public synchronized String registrarEntrada(String codigo) {
+        if (codigo == null || codigo.trim().isEmpty()) {
+            return "Ingresa el código de la reserva.";
+        }
+
+        Reserva reserva = buscarReserva(codigo);
+
+        if (reserva == null) {
+            return "No existe una reserva con ese código.";
+        }
+
+        if (reserva.getEstado() != EstadoReserva.CONFIRMADA) {
+            return "Solo se puede registrar la entrada de una reserva confirmada.";
+        }
+
+        LocalDate hoy = LocalDate.now();
+
+        if (!hoy.equals(reserva.getFechaEntrada())) {
+            return "La entrada debe registrarse el día de la fecha programada.";
+        }
+
+        reserva.cambiarEstado(EstadoReserva.HOSPEDADO);
+        return "";
+    }
+
+    public synchronized String registrarSalida(String codigo) {
+        if (codigo == null || codigo.trim().isEmpty()) {
+            return "Ingresa el código de la reserva.";
+        }
+
+        Reserva reserva = buscarReserva(codigo);
+
+        if (reserva == null) {
+            return "No existe una reserva con ese código.";
+        }
+
+        if (reserva.getEstado() != EstadoReserva.HOSPEDADO) {
+            return "Solo se puede registrar la salida de una reserva en estado Hospedado.";
+        }
+
+        reserva.registrarSalidaReal(LocalDate.now());
+        reserva.cambiarEstado(EstadoReserva.FINALIZADA);
+        return "";
+    }
+
     // ===== Disponibilidad =====
     public synchronized int consultarDisponibilidad(
             LocalDate fecha, ArrayList<String> numeros) {

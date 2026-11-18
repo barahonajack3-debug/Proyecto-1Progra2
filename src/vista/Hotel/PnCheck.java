@@ -4,6 +4,7 @@
  */
 package vista.Hotel;
 
+import controlador.ControladorCheck;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -20,6 +21,7 @@ public class PnCheck extends javax.swing.JPanel {
      */
     public PnCheck() {
         initComponents();
+        new ControladorCheck(this);
     }
 
     public String getCodigoReserva() {
