@@ -126,7 +126,11 @@ public class GestorHotel {
     }
     
     //=====Reservas=====    
-    public synchronized Reserva registarReserva(Huesped huesped,Habitacion habitacion,
+    public ArrayList<Reserva> getReservas() {
+        return reservas;
+    }
+    
+    public synchronized Reserva registrarReserva(Huesped huesped,Habitacion habitacion,
         int personas,LocalDate entrada,LocalDate salida){
         
         if(huesped==null){
@@ -204,7 +208,7 @@ public class GestorHotel {
         return cantidad;
     }
     
-    public synchronized ArrayList<Reserva> simularVencidad(LocalDate fechaReferencia){
+    public synchronized ArrayList<Reserva> simularVencidas(LocalDate fechaReferencia){
         ArrayList<Reserva> resultado = new ArrayList<>();
         for (Reserva reserva : reservas) {
             if (reserva.getEstado() == EstadoReserva.CONFIRMADA
@@ -240,18 +244,5 @@ public class GestorHotel {
             }
         }
         return disponibles;
-    }
-        
-    public synchronized ArrayList<Reserva> simularVencidad(LocalDate fechaReferencia) {
-        ArrayList<Reserva> vencidas = new ArrayList<>();
-
-        for (Reserva reserva : reservas) {
-            if (reserva.getEstado() == EstadoReserva.CONFIRMADA
-                    && reserva.getFechaEntrada().isBefore(fechaReferencia)) {
-                vencidas.add(reserva);
-            }
-        }
-
-        return vencidas;
     }
 }

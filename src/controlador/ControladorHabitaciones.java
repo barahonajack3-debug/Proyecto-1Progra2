@@ -16,7 +16,7 @@ import vista.Hotel.Habitaciones;
  *
  * @author USER
  */
-public class ControladorHabitacion implements ActionListener {
+public class ControladorHabitaciones implements ActionListener {
     //Atributos
     private final Habitaciones vista;
     private final GestorHotel gestor;
