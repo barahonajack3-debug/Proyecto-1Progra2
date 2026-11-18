@@ -4,6 +4,10 @@
  */
 package vista.Hotel;
 
+import controlador.ControladorInicio;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+
 /**
  *
  * @author USER
@@ -15,6 +19,41 @@ public class PnInicio extends javax.swing.JPanel {
      */
     public PnInicio() {
         initComponents();
+        new ControladorInicio(this);
+    }
+
+    public JButton getBtnEjecutarProcesos() {
+        return jButton1;
+    }
+
+    public void mostrarIndicadores(int total, int ocupadas, int noOcupadas,
+            int confirmadas, int vencidas, long ingresos) {
+
+        mostrarIndicador(jLabel2, "Total de habitaciones", "" + total);
+        mostrarIndicador(jLabel3, "Ocupadas actualmente", "" + ocupadas);
+        mostrarIndicador(jLabel4, "No ocupadas actualmente", "" + noOcupadas);
+        mostrarIndicador(jLabel5, "Reservas confirmadas", "" + confirmadas);
+        mostrarIndicador(jLabel6, "Reservas vencidas", "" + vencidas);
+        mostrarIndicador(jLabel7, "Ingresos esperados (confirmadas)",
+                "₡" + ingresos);
+    }
+
+    private void mostrarIndicador(JLabel etiqueta, String titulo, String valor) {
+        etiqueta.setText(
+                "<html>" + titulo
+                + "<br><font size=\"6\" color=\"#437EB5\"><b>"
+                + valor + "</b></font></html>"
+        );
+    }
+
+    public void mostrarProcesosEnEjecucion(boolean ejecutando) {
+        jButton1.setEnabled(!ejecutando);
+
+        if (ejecutando) {
+            jButton1.setText("Procesos en ejecución...");
+        } else {
+            jButton1.setText("Ejecutar procesos de supervisión");
+        }
     }
 
     /**
@@ -26,19 +65,85 @@ public class PnInicio extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+
+        jLabel1.setText("<html><font size=\"5\" color=\"#437EB5\"><b>Resumen del hotel</b></font></html>");
+
+        jLabel2.setText("<html>Total de habitaciones<br><font size=\"6\" color=\"#437EB5\"><b>0</b></font></html>");
+
+        jLabel3.setText("<html>Ocupadas actualmente<br><font size=\"6\" color=\"#437EB5\"><b>0</b></font></html>");
+
+        jLabel4.setText("<html>No ocupadas actualmente<br><font size=\"6\" color=\"#437EB5\"><b>0</b></font></html>");
+
+        jLabel5.setText("<html>Reservas confirmadas<br><font size=\"6\" color=\"#437EB5\"><b>0</b></font></html>");
+
+        jLabel6.setText("<html>Reservas vencidas<br><font size=\"6\" color=\"#437EB5\"><b>0</b></font></html>");
+
+        jLabel7.setText("<html>Ingresos esperados (confirmadas)<br><font size=\"6\" color=\"#437EB5\"><b>₡0</b></font></html>");
+
+        jButton1.setBackground(new java.awt.Color(28, 86, 150));
+        jButton1.setText("Ejecutar procesos de supervisión");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(171, 171, 171)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(175, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(52, 52, 52)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(52, 52, 52)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(49, 49, 49)
+                .addComponent(jButton1)
+                .addContainerGap(56, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     // End of variables declaration//GEN-END:variables
 }

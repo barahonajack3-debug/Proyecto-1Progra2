@@ -4,6 +4,12 @@
  */
 package vista.Hotel;
 
+import controlador.ControladorCheck;
+import java.time.format.DateTimeFormatter;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import modelo.Reserva;
+
 /**
  *
  * @author USER
@@ -15,6 +21,66 @@ public class PnCheck extends javax.swing.JPanel {
      */
     public PnCheck() {
         initComponents();
+        new ControladorCheck(this);
+    }
+
+    public String getCodigoReserva() {
+        return jTextField1.getText().trim();
+    }
+
+    public JButton getBtnBuscar() {
+        return jButton1;
+    }
+
+    public JButton getBtnRegistrarEntrada() {
+        return jButton2;
+    }
+
+    public JButton getBtnRegistrarSalida() {
+        return jButton3;
+    }
+
+    public void mostrarReserva(Reserva reserva) {
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/uuuu");
+
+        jLabel5.setText(reserva.getHuesped().getNombreCompleto());
+        jLabel7.setText(reserva.getHabitacion().getNumero());
+        jLabel9.setText(reserva.getFechaEntrada().format(formato));
+        jLabel11.setText(reserva.getFechaSalida().format(formato));
+        jLabel13.setText(reserva.getEstado().toString());
+    }
+
+    public void habilitarBotones(boolean entrada, boolean salida) {
+        jButton2.setEnabled(entrada);
+        jButton3.setEnabled(salida);
+    }
+
+    public void limpiarDetalle() {
+        jLabel5.setText("—");
+        jLabel7.setText("—");
+        jLabel9.setText("—");
+        jLabel11.setText("—");
+        jLabel13.setText("—");
+
+        habilitarBotones(false, false);
+    }
+
+    public void mostrarError(String mensaje) {
+        JOptionPane.showMessageDialog(
+                this,
+                mensaje,
+                "Check-in / Check-out",
+                JOptionPane.ERROR_MESSAGE
+        );
+    }
+
+    public void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(
+                this,
+                mensaje,
+                "Check-in / Check-out",
+                JOptionPane.INFORMATION_MESSAGE
+        );
     }
 
     /**

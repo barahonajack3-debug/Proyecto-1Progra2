@@ -195,6 +195,183 @@ public class GestorHotel {
         return null;
     }
     
+    // ===== Check-in y check-out =====
+    public synchronized String registrarEntrada(String codigo) {
+        if (codigo == null || codigo.trim().isEmpty()) {
+            return "Ingresa el código de la reserva.";
+        }
+
+        Reserva reserva = buscarReserva(codigo);
+
+        if (reserva == null) {
+            return "No existe una reserva con ese código.";
+        }
+
+        if (reserva.getEstado() != EstadoReserva.CONFIRMADA) {
+            return "Solo se puede registrar la entrada de una reserva confirmada.";
+        }
+
+        LocalDate hoy = LocalDate.now();
+
+        if (!hoy.equals(reserva.getFechaEntrada())) {
+            return "La entrada debe registrarse el día de la fecha programada.";
+        }
+
+        reserva.cambiarEstado(EstadoReserva.HOSPEDADO);
+        return "";
+    }
+
+    public synchronized String registrarSalida(String codigo) {
+        if (codigo == null || codigo.trim().isEmpty()) {
+            return "Ingresa el código de la reserva.";
+        }
+
+        Reserva reserva = buscarReserva(codigo);
+
+        if (reserva == null) {
+            return "No existe una reserva con ese código.";
+        }
+
+        if (reserva.getEstado() != EstadoReserva.HOSPEDADO) {
+            return "Solo se puede registrar la salida de una reserva en estado Hospedado.";
+        }
+
+        reserva.registrarSalidaReal(LocalDate.now());
+        reserva.cambiarEstado(EstadoReserva.FINALIZADA);
+        return "";
+    }
+
+    // ===== Disponibilidad =====
+    public synchronized int consultarDisponibilidad(
+            LocalDate fecha, ArrayList<String> numeros) {
+
+        numeros.clear();
+        return contarDisponibles(fecha, numeros, 0);
+    }
+
+    private int contarDisponibles(
+            LocalDate fecha, ArrayList<String> numeros, int indice) {
+
+        // Caso base: ya revisamos todas las habitaciones.
+        if (indice == habitaciones.size()) {
+            return 0;
+        }
+
+        Habitacion habitacion = habitaciones.get(indice);
+        int cantidad = 0;
+
+        if (estaDisponible(habitacion, fecha)) {
+            numeros.add(habitacion.getNumero());
+            cantidad = 1;
+        }
+
+        // Sumamos esta habitación y revisamos la siguiente.
+        return cantidad + contarDisponibles(fecha, numeros, indice + 1);
+    }
+
+    private boolean estaDisponible(Habitacion habitacion, LocalDate fecha) {
+
+        for (Reserva reserva : reservas) {
+            boolean mismaHabitacion = reserva.getHabitacion().getNumero()
+                    .equalsIgnoreCase(habitacion.getNumero());
+
+            boolean bloquea = reserva.getEstado() == EstadoReserva.CONFIRMADA
+                    || reserva.getEstado() == EstadoReserva.HOSPEDADO;
+
+            boolean dentroDelPeriodo = !fecha.isBefore(reserva.getFechaEntrada())
+                    && fecha.isBefore(reserva.getFechaSalida());
+
+            if (mismaHabitacion && bloquea && dentroDelPeriodo) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // ===== Indicadores del hotel =====
+    public synchronized int getTotalHabitaciones() {
+        return habitaciones.size();
+    }
+
+    public synchronized int getHabitacionesOcupadas() {
+        int cantidad = 0;
+
+        for (Habitacion habitacion : habitaciones) {
+            if (estaHospedada(habitacion)) {
+                cantidad++;
+            }
+        }
+
+        return cantidad;
+    }
+
+    private boolean estaHospedada(Habitacion habitacion) {
+        for (Reserva reserva : reservas) {
+            boolean mismaHabitacion = reserva.getHabitacion().getNumero()
+                    .equalsIgnoreCase(habitacion.getNumero());
+
+            if (mismaHabitacion
+                    && reserva.getEstado() == EstadoReserva.HOSPEDADO) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public synchronized int getHabitacionesNoOcupadas() {
+        return habitaciones.size() - getHabitacionesOcupadas();
+    }
+
+    public synchronized int getReservasConfirmadas() {
+        int cantidad = 0;
+
+        for (Reserva reserva : reservas) {
+            if (reserva.getEstado() == EstadoReserva.CONFIRMADA) {
+                cantidad++;
+            }
+        }
+
+        return cantidad;
+    }
+
+    public synchronized int getReservasVencidas() {
+        int cantidad = 0;
+
+        for (Reserva reserva : reservas) {
+            if (reserva.getEstado() == EstadoReserva.VENCIDA) {
+                cantidad++;
+            }
+        }
+
+        return cantidad;
+    }
+
+    public synchronized long calcularIngresosEsperados() {
+        return sumarIngresosConfirmados(reservas, 0);
+    }
+
+    private long sumarIngresosConfirmados(
+            ArrayList<Reserva> listaReservas, int indice) {
+
+        // Caso base: se revisaron todas las reservas.
+        if (indice == listaReservas.size()) {
+            return 0;
+        }
+
+        Reserva reserva = listaReservas.get(indice);
+        long importe = 0;
+
+        if (reserva.getEstado() == EstadoReserva.CONFIRMADA) {
+            importe = reserva.getImporte();
+        }
+
+        // Sumamos el importe y revisamos la siguiente reserva.
+        return importe
+                + sumarIngresosConfirmados(listaReservas, indice + 1);
+    }
+
     //======Vencimientos=====
     public synchronized int marcarVencidas(LocalDate fechaActual){
         int cantidad=0;
