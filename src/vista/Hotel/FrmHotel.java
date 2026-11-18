@@ -14,17 +14,37 @@ import javax.swing.JButton;
  */
 public class FrmHotel extends javax.swing.JFrame {
 
+    private ControladorHotel controladorHotel;
+
     /**
      * Creates new form FrmHotel
      */
     public FrmHotel() {
         initComponents();
-        new ControladorHotel(this);
+        controladorHotel = new ControladorHotel(this);
         setLocationRelativeTo(null);
     }
 
     public JButton getBtnCambiarUsuario() {
         return btnCambiarUsuario;
+    }
+
+    public ControladorHotel getControladorHotel() {
+        return controladorHotel;
+    }
+
+    /**
+     * Arranca los procesos de supervisión. Se mantiene aquí para que el panel
+     * de Inicio pueda invocarlo sin conocer los controladores internos.
+     *
+     * @return true si se inició la supervisión, false si ya había una activa
+     */
+    public boolean ejecutarSupervision() {
+        return controladorHotel.ejecutarSupervision();
+    }
+
+    public boolean isSupervisionActiva() {
+        return controladorHotel.isSupervisionActiva();
     }
 
     public void setRecepcionista(String usuario) {
@@ -97,24 +117,27 @@ public class FrmHotel extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabs, javax.swing.GroupLayout.DEFAULT_SIZE, 520, Short.MAX_VALUE)
-            .addComponent(pnPie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(tabs, javax.swing.GroupLayout.DEFAULT_SIZE, 520, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(pnPie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCambiarUsuario;
     private javax.swing.JLabel lblSesion;
-    private javax.swing.JPanel pnPie;
-    private javax.swing.JTabbedPane tabs;
-    private vista.Hotel.Habitaciones pnHabitaciones;
     private vista.Hotel.PnCheck pnCheck;
     private vista.Hotel.PnDisponibilidad pnDisponibilidad;
+    private vista.Hotel.Habitaciones pnHabitaciones;
     private vista.Hotel.PnHuespedes pnHuespedes;
     private vista.Hotel.PnInicio pnInicio;
-    private vista.Hotel.PnSimulacion pnSimulacion;
+    private javax.swing.JPanel pnPie;
     private vista.Hotel.Reservas pnReservas;
+    private vista.Hotel.PnSimulacion pnSimulacion;
+    private javax.swing.JTabbedPane tabs;
     // End of variables declaration//GEN-END:variables
 }

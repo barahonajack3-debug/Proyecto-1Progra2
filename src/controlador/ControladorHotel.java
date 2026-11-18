@@ -4,6 +4,8 @@
  */
 package controlador;
 
+import hilos.SupervisorReservas;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JOptionPane;
 import modelo.GestorHotel;
 import vista.Hotel.FrmHotel;
@@ -16,12 +18,48 @@ import vista.Login.FrmLogin;
 public class ControladorHotel {
     private final FrmHotel vista;
     private final GestorHotel gestor;
+    private final AtomicBoolean supervisionActiva = new AtomicBoolean(false);
 
     public ControladorHotel(FrmHotel vista) {
         this.vista = vista;
         this.gestor = GestorHotel.getInstancia();
 
         vista.getBtnCambiarUsuario().addActionListener(e -> cambiarUsuario());
+    }
+
+    /**
+     * Lanza los procesos de supervisión en segundo plano. Por ahora arranca el
+     * hilo 1 (SupervisorReservas); cuando esté disponible el hilo 2 se une aquí.
+     * No permite una segunda ejecución mientras la anterior siga activa.
+     *
+     * @return true si se inició, false si ya había una supervisión en curso
+     */
+    public boolean ejecutarSupervision() {
+        if (!supervisionActiva.compareAndSet(false, true)) {
+            return false;
+        }
+
+        Thread supervisor = new Thread(new SupervisorReservas(), "SupervisorReservas");
+        supervisor.setDaemon(true);
+        supervisor.start();
+
+        Thread vigilante = new Thread(() -> {
+            try {
+                supervisor.join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } finally {
+                supervisionActiva.set(false);
+            }
+        }, "VigilanteSupervision");
+        vigilante.setDaemon(true);
+        vigilante.start();
+
+        return true;
+    }
+
+    public boolean isSupervisionActiva() {
+        return supervisionActiva.get();
     }
 
     private void cambiarUsuario() {

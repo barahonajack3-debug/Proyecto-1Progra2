@@ -30,7 +30,7 @@ public class FrmLogin extends javax.swing.JFrame {
     }
 
     public String getUsuario() {
-        return txtUsuario.getText();
+        return txtUsuario.getText().trim();
     }
 
     public String getClave() {

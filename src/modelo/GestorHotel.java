@@ -37,9 +37,11 @@ public class GestorHotel {
 
     public synchronized boolean iniciarSesion(String usuario, String clave) {
 
-        if (sesionActiva != null) {
+        if (sesionActiva != null || usuario == null || clave == null) {
             return false;
         }
+
+        usuario = usuario.trim();
 
         for (Recepcionista recepcionista : recepcionistas) {
             if (recepcionista.getUsuario().equals(usuario)
@@ -139,6 +141,11 @@ public class GestorHotel {
             int personas,
             LocalDate entrada,
             LocalDate salida) {
+
+        if (sesionActiva == null) {
+            throw new IllegalArgumentException(
+                    "Debe iniciar sesión antes de registrar reservas.");
+        }
 
         if (huesped == null) {
             throw new IllegalArgumentException("Debe seleccionar un huésped.");
